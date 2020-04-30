@@ -7,28 +7,24 @@ import (
 
 // Sin implements Generator
 type Sin struct {
-	ts time.Time
-	Freq float64
+	ts     time.Time
+	Period time.Duration
+	Ray    float64
 }
 
 // NewSin creates a new Sin generator with initial timestamp
-func NewSin(frequency float64) *Sin {
+func NewSin(period time.Duration, ray float64) *Sin {
 	return &Sin{
-		ts: time.Now(),
-		Freq: frequency,
+		ts:     time.Now(),
+		Period: period,
+		Ray:    ray,
 	}
 }
 
 // NextVal generates values from a sin function
 func (s *Sin) NextVal() float64 {
-	return math.Sin(s.radians())
-}
-
-func (s *Sin) radians() float64 {
 	now := time.Now()
-	dur := now.Sub(s.ts)
-	radSec := s.Freq * math.Pi * 2.0
-	rad := radSec * dur.Seconds()
-	s.ts = now
-	return rad
+	dur := now.Sub(s.ts).Seconds()
+	radSec := (2.0 * math.Pi) / s.Period.Seconds()
+	return s.Ray * math.Sin(radSec * dur)
 }
