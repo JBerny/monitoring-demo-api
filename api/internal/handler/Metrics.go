@@ -12,26 +12,34 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var labels = []string{"country"}
 
+var mapLabels = map[string][]string{
+	"country": []string{ "nl", "it", "de", "pl", "fr" },
+}
 
 var metrics = metric.Metrics{
 	metric.Metric{
-		Counter: promauto.NewCounter(
+		Counters: promauto.NewCounterVec(
 			prometheus.CounterOpts{
 				Help: "Total count of requests",
 				Name: "api_request_count", 
 			},
+			labels,
 		),
 		Generator: generator.Rand{ Max: 30, },
+		Labels: mapLabels,
 	},
 	metric.Metric{
-		Gauge: promauto.NewGauge(
+		Gauges: promauto.NewGaugeVec(
 			prometheus.GaugeOpts{
 				Help: "Nr of customers currently logged on",
 				Name: "logged_on_customers",
 			},
+			labels,
 		),
-		Generator: generator.NewSin(5*time.Minute, 100),
+		Generator: generator.NewLoggedOnCustomers(),
+		Labels: mapLabels,
 	},
 }
 

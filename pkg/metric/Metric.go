@@ -7,9 +7,10 @@ import (
 
 // Metric represents a prometheus metric
 type Metric struct {
-	Counter     prometheus.Counter
-	Gauge 	    prometheus.Gauge
+	Counters    *prometheus.CounterVec
+	Gauges 	    *prometheus.GaugeVec
 	Generator   generator.Generator
+	Labels      map[string][]string
 }
 
 // Metrics an array of Metric

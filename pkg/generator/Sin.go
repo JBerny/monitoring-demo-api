@@ -28,3 +28,9 @@ func (s *Sin) NextVal() float64 {
 	radSec := (2.0 * math.Pi) / s.Period.Seconds()
 	return s.Ray * math.Sin(radSec * dur)
 }
+
+// PositiveSin implements Generator
+type PositiveSin struct {
+	Sin    Sin
+	Offset int
+}

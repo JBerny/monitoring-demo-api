@@ -3,9 +3,7 @@ package engine
 import (
 	"time"
 
-	"github.com/jberny/monitoring-demo-api/pkg/generator"
 	"github.com/jberny/monitoring-demo-api/pkg/metric"
-	"github.com/prometheus/client_golang/prometheus"
 )
 
 // Opts contains options to configure the engine.Run
@@ -18,23 +16,25 @@ type Opts struct {
 func Run(o Opts) {
 	go func() {
 		for {
-			if o.Metric.Counter != nil {
-				counterAdd(o.Metric.Generator, o.Metric.Counter)
-			} else if o.Metric.Gauge != nil {
-				gaugeSet(o.Metric.Generator, o.Metric.Gauge)
-			} else {
-				return
+			for _, v := range o.Metric.Labels {
+				for _, lv := range v { 
+					val := o.Metric.Generator.NextVal()
+					if o.Metric.Counters != nil {
+						c, err := o.Metric.Counters.GetMetricWithLabelValues(lv)
+						if err == nil {
+							c.Add(val)
+						}
+					} else if o.Metric.Gauges != nil {
+						g, err := o.Metric.Gauges.GetMetricWithLabelValues(lv)
+						if err == nil {
+							g.Set(val)
+						}
+					} else {
+						return
+					}
+				}
 			}
 			time.Sleep(o.Interval)
 		}
 	}()
-}
-
-func counterAdd(g generator.Generator, m prometheus.Counter)  {
-	m.Add(g.NextVal())
-	
-}
-
-func gaugeSet(g generator.Generator, m prometheus.Gauge)  {
-	m.Set(g.NextVal())
 }
