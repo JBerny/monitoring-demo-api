@@ -2,6 +2,7 @@ package generator
 
 import (
 	"math"
+	"math/rand"
 	"time"
 )
 
@@ -34,25 +35,19 @@ func (r LoggedOnCustomers) NextVal() float64 {
 // APIRequestDuration demo generator, 
 // represents the total time in seconds that it takes to the api to fulfill a request
 // implements Generator interface
-type APIRequestDuration struct {
-	count   float64
-}
+type APIRequestDuration struct {}
 
 // NextVal returns next value 
 func (a APIRequestDuration) NextVal() float64 {
-	a.count = a.count + 1.0
-	return math.Abs(500*math.Cos(a.count))
+	return float64(rand.Int31n(700))
 }
 
 // ServiceRequestDuration demo generator, 
 // represents the total time in seconds that it takes to the api to fulfill a request
 // implements Generator interface
-type ServiceRequestDuration struct {
-	count   float64
-}
+type ServiceRequestDuration struct {}
 
 // NextVal returns next value 
 func (a ServiceRequestDuration) NextVal() float64 {
-	a.count = a.count + 1.0
-	return math.Abs(500*math.Sin(a.count))
+	return float64(rand.Int31n(450))
 }
