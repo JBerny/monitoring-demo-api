@@ -35,19 +35,24 @@ func (r LoggedOnCustomers) NextVal() float64 {
 // APIRequestDuration demo generator, 
 // represents the total time in seconds that it takes to the api to fulfill a request
 // implements Generator interface
-type APIRequestDuration struct {}
+type APIRequestDuration struct {
+	count   float64
+}
 
 // NextVal returns next value 
 func (a APIRequestDuration) NextVal() float64 {
-	return rand.Float64()
+	return 32 + math.Floor(100*math.Cos(a.count*0.11))/10
 }
 
 // ServiceRequestDuration demo generator, 
 // represents the total time in seconds that it takes to the api to fulfill a request
 // implements Generator interface
-type ServiceRequestDuration struct {}
+type ServiceRequestDuration struct {
+	count   float64
+}
 
 // NextVal returns next value 
 func (a ServiceRequestDuration) NextVal() float64 {
-	return rand.Float64()
+	a.count = a.count + 1.0
+	return 30 + math.Floor(120*math.Sin(a.count*0.1))/10
 }
