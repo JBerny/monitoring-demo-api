@@ -46,7 +46,7 @@ var metrics = metric.Metrics{
 			prometheus.SummaryOpts{
 				Help: "Total time in seconds that it takes to the api to fulfill a request",
 				Name: "api_request_duration_seconds",
-				Objectives: map[float64]float64{ 0.99: 0.0, 0.95: 0.0, 0.5: 0.0 },
+				Objectives: map[float64]float64{ 0.99: 100.0, 0.95: 200.0, 0.5: 300.0 },
 			},
 			labels,
 		),

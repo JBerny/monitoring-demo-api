@@ -40,7 +40,8 @@ type APIRequestDuration struct {
 
 // NextVal returns next value 
 func (a APIRequestDuration) NextVal() float64 {
-	return 32 + math.Floor(100*math.Cos(a.count*0.11))/10
+	a.count = a.count + 1.0
+	return math.Abs(500*math.Cos(a.count))
 }
 
 // ServiceRequestDuration demo generator, 
@@ -53,5 +54,5 @@ type ServiceRequestDuration struct {
 // NextVal returns next value 
 func (a ServiceRequestDuration) NextVal() float64 {
 	a.count = a.count + 1.0
-	return 30 + math.Floor(120*math.Sin(a.count*0.1))/10
+	return math.Abs(500*math.Sin(a.count))
 }
