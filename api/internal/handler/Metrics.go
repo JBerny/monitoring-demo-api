@@ -15,7 +15,7 @@ import (
 var labels = []string{"country"}
 
 var mapLabels = map[string][]string{
-	"country": []string{ "nl", "it", "de", "pl", "fr" },
+	"country": { "nl", "it", "de", "pl", "fr" },
 }
 
 var metrics = metric.Metrics{
@@ -39,6 +39,30 @@ var metrics = metric.Metrics{
 			labels,
 		),
 		Generator: generator.NewLoggedOnCustomers(),
+		Labels: mapLabels,
+	},
+	metric.Metric{
+		Summary: promauto.NewSummaryVec(
+			prometheus.SummaryOpts{
+				Help: "Total time in seconds that it takes to the api to fulfill a request",
+				Name: "api_request_duration_seconds",
+				Objectives: map[float64]float64{ 0.99: 0.0, 0.95: 0.0, 0.5: 0.0 },
+			},
+			labels,
+		),
+		Generator: generator.APIRequestDuration{},
+		Labels: mapLabels,
+	},
+	metric.Metric{
+		Histogram: promauto.NewHistogramVec(
+			prometheus.HistogramOpts{
+				Help: "Total time in seconds that it invoke a service and receive a response",
+				Name: "service_request_duration_seconds",
+				Buckets: []float64{ 100.0, 200.0 },
+			},
+			labels,
+		),
+		Generator: generator.ServiceRequestDuration{},
 		Labels: mapLabels,
 	},
 }

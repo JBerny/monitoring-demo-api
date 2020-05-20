@@ -9,6 +9,8 @@ import (
 type Metric struct {
 	Counters    *prometheus.CounterVec
 	Gauges 	    *prometheus.GaugeVec
+	Summary     *prometheus.SummaryVec
+	Histogram   *prometheus.HistogramVec
 	Generator   generator.Generator
 	Labels      map[string][]string
 }

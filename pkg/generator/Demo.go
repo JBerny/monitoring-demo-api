@@ -2,15 +2,19 @@ package generator
 
 import (
 	"math"
+	"math/rand"
 	"time"
 )
 
 // LoggedOnCustomers demo generator, simulates a trend of customers
+// implements Generator interface
 type LoggedOnCustomers struct {
 	sin Sin
 	rand Rand
 }
 
+// NewLoggedOnCustomers creates a LoggedOnCustomers struct
+// initialized with a generator.Sin and a generator.Rand 
 func NewLoggedOnCustomers() LoggedOnCustomers {
 	return LoggedOnCustomers{
 		sin: *NewSin(15*time.Minute, 50),
@@ -18,6 +22,7 @@ func NewLoggedOnCustomers() LoggedOnCustomers {
 	}
 }
 
+// NextVal returns next value 
 func (r LoggedOnCustomers) NextVal() float64 {
 	val := r.sin.NextVal() + 15
 	offset := r.rand.NextVal()
@@ -25,4 +30,24 @@ func (r LoggedOnCustomers) NextVal() float64 {
 		return offset
 	} 
 	return math.Round(val + offset)
+}
+
+// APIRequestDuration demo generator, 
+// represents the total time in seconds that it takes to the api to fulfill a request
+// implements Generator interface
+type APIRequestDuration struct {}
+
+// NextVal returns next value 
+func (a APIRequestDuration) NextVal() float64 {
+	return rand.Float64()
+}
+
+// ServiceRequestDuration demo generator, 
+// represents the total time in seconds that it takes to the api to fulfill a request
+// implements Generator interface
+type ServiceRequestDuration struct {}
+
+// NextVal returns next value 
+func (a ServiceRequestDuration) NextVal() float64 {
+	return rand.Float64()
 }

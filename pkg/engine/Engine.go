@@ -3,6 +3,7 @@ package engine
 import (
 	"time"
 
+	"github.com/google/logger"
 	"github.com/jberny/monitoring-demo-api/pkg/metric"
 )
 
@@ -28,6 +29,16 @@ func Run(o Opts) {
 						g, err := o.Metric.Gauges.GetMetricWithLabelValues(lv)
 						if err == nil {
 							g.Set(val)
+						}
+					} else if o.Metric.Summary != nil {
+						s, err := o.Metric.Summary.GetMetricWithLabelValues(lv)
+						if err == nil {
+							s.Observe(val)
+						}
+					} else if o.Metric.Histogram != nil {
+						s, err := o.Metric.Histogram.GetMetricWithLabelValues(lv)
+						if err == nil {
+							s.Observe(val)
 						}
 					} else {
 						return
