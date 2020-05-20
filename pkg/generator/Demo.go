@@ -2,7 +2,6 @@ package generator
 
 import (
 	"math"
-	"math/rand"
 	"time"
 )
 
