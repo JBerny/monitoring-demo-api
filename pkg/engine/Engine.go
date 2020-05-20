@@ -3,7 +3,6 @@ package engine
 import (
 	"time"
 
-	"github.com/google/logger"
 	"github.com/jberny/monitoring-demo-api/pkg/metric"
 )
 
