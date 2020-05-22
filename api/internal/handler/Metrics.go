@@ -31,6 +31,19 @@ var metrics = metric.Metrics{
 		Labels: mapLabels,
 	},
 	metric.Metric{
+		Counters: promauto.NewCounterVec(
+			prometheus.CounterOpts{
+				Help: "Count of the status of each response",
+				Name: "api_response_status_count", 
+			},
+			[]string{"status"},
+		),
+		Generator: generator.Rand{ Max: 23, },
+		Labels: map[string][]string{
+			"status": { "SUCCESS", "FAILURE", "ERROR" },
+		},
+	},
+	metric.Metric{
 		Gauges: promauto.NewGaugeVec(
 			prometheus.GaugeOpts{
 				Help: "Nr of customers currently logged on",
