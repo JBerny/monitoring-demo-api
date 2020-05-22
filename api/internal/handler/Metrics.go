@@ -46,24 +46,31 @@ var metrics = metric.Metrics{
 			prometheus.SummaryOpts{
 				Help: "Total time in seconds that it takes to the api to fulfill a request",
 				Name: "api_request_duration_seconds",
-				Objectives: map[float64]float64{ 0.99: 100.0, 0.95: 200.0, 0.5: 300.0 },
+				Objectives: map[float64]float64{ 0.99: 0.1, 0.95: 0.2, 0.5: 0.3 },
 			},
-			labels,
+			[]string{"url"},
 		),
 		Generator: generator.APIRequestDuration{},
-		Labels: mapLabels,
+		Labels: map[string][]string{
+			"url": {"/api", "/api/users", "/api/books/naked-sun", 
+				"/api/authors/isaac-asimov", 
+				"/api/authors/isaac-asimov/books",
+			},
+		},
 	},
 	metric.Metric{
 		Histogram: promauto.NewHistogramVec(
 			prometheus.HistogramOpts{
 				Help: "Total time in seconds that it invoke a service and receive a response",
 				Name: "service_request_duration_seconds",
-				Buckets: []float64{ 100.0, 200.0 },
+				Buckets: []float64{ 0.1, 0.2 },
 			},
-			labels,
+			[]string{"service"},
 		),
 		Generator: generator.ServiceRequestDuration{},
-		Labels: mapLabels,
+		Labels: map[string][]string{
+			"service": {"users", "authors", "books", },
+		},
 	},
 }
 
@@ -79,6 +86,3 @@ func NewMetrics() http.Handler {
 	return promhttp.Handler()
 }
 
-// func (m Metrics) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-// 	m.Handler.ServeHTTP(w, r)
-// }
