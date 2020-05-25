@@ -16,35 +16,38 @@ type Opts struct {
 func Run(o Opts) {
 	go func() {
 		for {
-			for _, v := range o.Metric.Labels {
-				for _, lv := range v { 
-					val := o.Metric.Generator.NextVal()
-					if o.Metric.Counters != nil {
-						c, err := o.Metric.Counters.GetMetricWithLabelValues(lv)
-						if err == nil {
-							c.Add(val)
-						}
-					} else if o.Metric.Gauges != nil {
-						g, err := o.Metric.Gauges.GetMetricWithLabelValues(lv)
-						if err == nil {
-							g.Set(val)
-						}
-					} else if o.Metric.Summary != nil {
-						s, err := o.Metric.Summary.GetMetricWithLabelValues(lv)
-						if err == nil {
-							s.Observe(val)
-						}
-					} else if o.Metric.Histogram != nil {
-						s, err := o.Metric.Histogram.GetMetricWithLabelValues(lv)
-						if err == nil {
-							s.Observe(val)
-						}
-					} else {
-						return
-					}
-				}
+			for _, lbls := range o.Metric.Labels {
+				val := o.Metric.Generator.NextVal()
+				alterMetric(o.Metric, val, lbls)
 			}
 			time.Sleep(o.Interval)
 		}
 	}()
+}
+
+func alterMetric(m metric.Metric, val float64, lv []string)  {
+	if m.Counters != nil {
+		c, err := m.Counters.GetMetricWithLabelValues(lv...)
+		if err == nil {
+			c.Add(val)
+		}
+	} else if m.Gauges != nil {
+		g, err := m.Gauges.GetMetricWithLabelValues(lv...)
+		if err == nil {
+			g.Set(val)
+		}
+	} else if m.Summary != nil {
+		s, err := m.Summary.GetMetricWithLabelValues(lv...)
+		if err == nil {
+			s.Observe(val)
+		}
+	} else if m.Histogram != nil {
+		s, err := m.Histogram.GetMetricWithLabelValues(lv...)
+		if err == nil {
+			s.Observe(val)
+			
+		}
+	} else {
+		return
+	}
 }

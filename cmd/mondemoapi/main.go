@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/google/logger"
 	"github.com/jberny/monitoring-demo-api/api/controller"
@@ -40,6 +42,7 @@ func init() {
 
 func main() {
 	handleSignals()
+	rand.Seed(time.Now().UnixNano())
 	logger.Init("StdoutLogger", *verbose, false, os.Stdout)
 	logger.Infoln("Starting http server on port 8080")
 	router := controller.NewRouter()

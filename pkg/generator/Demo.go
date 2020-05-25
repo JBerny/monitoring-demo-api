@@ -49,5 +49,5 @@ type ServiceRequestDuration struct {}
 
 // NextVal returns next value 
 func (a ServiceRequestDuration) NextVal() float64 {
-	return rand.Float64()
+	return float64(rand.Int63n(1500)) / 1000.0
 }
