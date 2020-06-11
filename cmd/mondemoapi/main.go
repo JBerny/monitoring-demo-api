@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"os"
@@ -21,34 +22,35 @@ func handleSignals() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 	go func() {
-		<- sigc
+		<-sigc
 		logger.Infoln("\n\nTime to go!")
 		os.Exit(0)
 	}()
 }
 
 func usage() {
-    flag.PrintDefaults()
-    os.Exit(2)
+	flag.PrintDefaults()
+	os.Exit(2)
 }
 
 var verbose = flag.Bool("v", false, "print info level logs to stdout")
+var port = flag.Int64("p", 8080, "port number")
 
 func init() {
 	flag.Usage = usage
-    
-    flag.Parse()
+
+	flag.Parse()
 }
 
 func main() {
 	handleSignals()
+	
 	rand.Seed(time.Now().UnixNano())
 	logger.Init("StdoutLogger", *verbose, false, os.Stdout)
-	logger.Infoln("Starting http server on port 8080")
+	logger.Infoln("Starting http server on port ", *port)
 	router := controller.NewRouter()
-	err := http.ListenAndServe(":8080", router)
-	if err != nil { 
+	err := http.ListenAndServe(fmt.Sprint(":", *port), router)
+	if err != nil {
 		logger.Fatalln(err)
 	}
 }
-
