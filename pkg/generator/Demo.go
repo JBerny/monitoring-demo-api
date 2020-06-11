@@ -45,9 +45,12 @@ func (a APIRequestDuration) NextVal() float64 {
 // ServiceRequestDuration demo generator, 
 // represents the total time in seconds that it takes to the api to fulfill a request
 // implements Generator interface
-type ServiceRequestDuration struct {}
+type ServiceRequestDuration struct {
+	Mean       float64
+	Deviation  float64
+}
 
 // NextVal returns next value 
 func (a ServiceRequestDuration) NextVal() float64 {
-	return float64(rand.Int63n(1500)) / 1000.0
+	return rand.NormFloat64() * a.Deviation + a.Mean
 }

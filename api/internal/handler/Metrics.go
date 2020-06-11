@@ -87,13 +87,16 @@ var metrics = metric.Metrics{
 	metric.Metric{
 		Histogram: promauto.NewHistogramVec(
 			prometheus.HistogramOpts{
-				Help:    "Total time in seconds that it invoke a service and receive a response",
+				Help:    "Total time in seconds that it takes to invoke a service and receive a response",
 				Name:    "service_request_duration_seconds",
-				Buckets: []float64{0.1, 0.2},
+				Buckets: []float64{0.1, 0.2, 0.5},
 			},
 			[]string{"service"},
 		),
-		Generator: generator.ServiceRequestDuration{},
+		Generator: generator.ServiceRequestDuration{
+			Mean: 0.8,
+			Deviation: 9,
+		},
 		Labels: combine([]string{""}, labels["service"]),
 	},
 }
